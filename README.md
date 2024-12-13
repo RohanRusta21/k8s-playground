@@ -2,6 +2,7 @@
 Playground for k8s
 
 ## Dummy todo app
+![screenshot](./assets/screenshot1.png)
 - Tech stack : React JS + Golang + Postgres
 - Download and save the file as `docker-compose.yaml`
 ```yaml
