@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { todo } from 'node:test';
 
 function App() {
   // Define the Todo interface
@@ -74,19 +75,29 @@ function App() {
 
   const handleEditTodo = async (uuid: string, updatedTodo: Partial<Todo>) => {
     try {
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo.uuid === uuid ? { ...todo, ...updatedTodo } : todo
+        )
+      );
+  
       const response = await fetch(`http://localhost:8080/todos/${uuid}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedTodo)
+        body: JSON.stringify(updatedTodo),
       });
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+  
+      // Optionally refresh todos from server
       await fetchTodos();
     } catch (error) {
       console.error('Error updating todo:', error);
     }
   };
+  
 
   const handleDeleteTodo = async (uuid: string) => {
     try {

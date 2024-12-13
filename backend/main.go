@@ -159,7 +159,9 @@ func updateTodo(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    result := db.Model(&Todo{}).Where("uuid = ?", uuid).Updates(updatedTodo)
+    result := db.Model(&Todo{}).Where("uuid = ?", uuid).Updates(map[string]interface{}{
+        "completed": updatedTodo.Completed,
+    })    
     if result.Error != nil {
         http.Error(w, result.Error.Error(), http.StatusInternalServerError)
         return
