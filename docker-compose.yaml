@@ -9,12 +9,11 @@ services:
       POSTGRES_PASSWORD: todopassword
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
 
   backend:
-    build: 
-      context: ./backend
+    image: aswinbenny/todo-backend:v1
     environment:
       - DB_HOST=postgres
       - DB_USER=todouser
@@ -29,8 +28,7 @@ services:
       - "8080:8080"
 
   frontend:
-    build: 
-      context: ./frontend
+    image: aswinbenny/todo-frontend:v1
     ports:
       - "3000:80"
     depends_on:
