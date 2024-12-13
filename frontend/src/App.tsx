@@ -46,6 +46,9 @@ function App() {
       if (data !== null) {
         setFiles(data);
       }
+      else {
+        setFiles([]);
+      }
     } catch (error) {
       console.error('Error fetching files:', error);
     }
@@ -142,6 +145,24 @@ function App() {
     }
   };
 
+  const handleFileDelete = async (fileName: string) => {
+    try {
+        const response = await fetch(`http://localhost:8080/files/${fileName}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Immediately update the files list
+        await fetchFiles();
+    } catch (error) {
+        console.error('Error deleting file:', error);
+    }
+};
+
+
   return (
     <div className="container mx-auto p-4">
       <Card className="mb-4">
@@ -207,21 +228,30 @@ function App() {
               <p className="text-gray-500">No files uploaded yet</p>
             ) : (
               <ul className="space-y-2">
-                {files.map((fileName) => (
-                  <li 
-                    key={fileName} 
-                    className="flex justify-between items-center p-2 border rounded"
-                  >
-                    <span>{fileName}</span>
-                    <Button 
-                      onClick={() => handleFileDownload(fileName)}
-                      size="sm"
-                    >
-                      Download
-                    </Button>
-                  </li>
-                ))}
-              </ul>
+    {files.map((fileName) => (
+        <li 
+            key={fileName} 
+            className="flex justify-between items-center p-2 border rounded"
+        >
+            <span>{fileName}</span>
+            <div className="space-x-2">
+                <Button 
+                    onClick={() => handleFileDownload(fileName)}
+                    size="sm"
+                >
+                    Download
+                </Button>
+                <Button 
+                    onClick={() => handleFileDelete(fileName)}
+                    size="sm"
+                    variant="destructive"
+                >
+                    Delete
+                </Button>
+            </div>
+        </li>
+    ))}
+</ul>
             )}
           </div>
         </CardContent>

@@ -83,6 +83,7 @@ func main() {
     r.HandleFunc("/files/upload", uploadFile).Methods("POST")
     r.HandleFunc("/files/list", listFiles).Methods("GET")
     r.HandleFunc("/files/download/{filename}", downloadFile).Methods("GET")
+    r.HandleFunc("/files/{filename}", deleteFile).Methods("DELETE")
 
     // CORS and server setup
     // handler := cors.Default().Handler(r)
@@ -245,4 +246,18 @@ func downloadFile(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
     w.Header().Set("Content-Type", "application/octet-stream")
     io.Copy(w, file)
+}
+
+func deleteFile(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    fileName := vars["filename"]
+    filePath := filepath.Join("/app/uploads", fileName)
+
+    err := os.Remove(filePath)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    w.WriteHeader(http.StatusOK)
 }
