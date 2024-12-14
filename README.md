@@ -50,3 +50,24 @@ volumes:
 - The app will run in `http://localhost:3000`
 - The file will be uploaded to `/app/uploads` folder in the backend volume
 - Backend runs in `http://localhost:8080`
+
+## K8s stuff 
+- Visit k8s folder
+
+```bash
+kind create cluster --config kind-cluster.yaml --name todo-cluster
+```
+
+```bash
+kubectl cluster-info --context kind-todo-cluster
+```
+- apply yaml files one at a time : postgres > backend > frontend
+```bash
+kubectl apply -f <yamlfile.yaml>
+```
+- Port forward to test 
+```bash
+kubectl port-forward svc/frontend-service 8081:80 
+kubectl port-forward svc/backend-service 8080:8080
+```
+- Visit http://localhost:8081 
