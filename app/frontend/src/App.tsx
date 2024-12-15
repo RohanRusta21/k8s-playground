@@ -24,9 +24,15 @@ function App() {
     fetchFiles();
   }, []);
 
+  // Get base URL from environment variable
+  const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api';
+  console.log('REACT_APP_API_BASE_URL:', process.env.REACT_APP_API_BASE_URL);
+  console.log('BASE_URL:', BASE_URL);
+
+
   const fetchTodos = async () => {
     try {
-      const response = await fetch('http://localhost:8080/todos');
+      const response = await fetch(BASE_URL+'/todos');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -39,7 +45,7 @@ function App() {
 
   const fetchFiles = async () => {
     try {
-      const response = await fetch('http://localhost:8080/files/list');
+      const response = await fetch(BASE_URL+'/files/list');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -58,7 +64,7 @@ function App() {
   const handleCreateTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/todos', {
+      const response = await fetch(BASE_URL+'/todos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTodo)
@@ -81,7 +87,7 @@ function App() {
         )
       );
   
-      const response = await fetch(`http://localhost:8080/todos/${uuid}`, {
+      const response = await fetch(BASE_URL+`/todos/${uuid}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTodo),
@@ -101,7 +107,7 @@ function App() {
 
   const handleDeleteTodo = async (uuid: string) => {
     try {
-      const response = await fetch(`http://localhost:8080/todos/${uuid}`, {
+      const response = await fetch(`${BASE_URL}/todos/${uuid}`, {
         method: 'DELETE'
       });
       if (!response.ok) {
@@ -125,7 +131,7 @@ function App() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8080/files/upload', {
+      const response = await fetch(BASE_URL+'/files/upload', {
         method: 'POST',
         body: formData
       });
@@ -140,7 +146,7 @@ function App() {
 
   const handleFileDownload = async (fileName: string) => {
     try {
-      const response = await fetch(`http://localhost:8080/files/download/${fileName}`);
+      const response = await fetch(`${BASE_URL}/files/download/${fileName}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -158,7 +164,7 @@ function App() {
 
   const handleFileDelete = async (fileName: string) => {
     try {
-        const response = await fetch(`http://localhost:8080/files/${fileName}`, {
+        const response = await fetch(`${BASE_URL}/files/${fileName}`, {
             method: 'DELETE'
         });
         

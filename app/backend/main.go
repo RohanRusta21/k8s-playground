@@ -72,18 +72,22 @@ func main() {
     // Create router
     r := mux.NewRouter()
 
-    // CRUD Routes for Todos
-    r.HandleFunc("/todos", createTodo).Methods("POST")
-    r.HandleFunc("/todos", getAllTodos).Methods("GET")
-    r.HandleFunc("/todos/{uuid}", getTodo).Methods("GET")
-    r.HandleFunc("/todos/{uuid}", updateTodo).Methods("PUT")
-    r.HandleFunc("/todos/{uuid}", deleteTodo).Methods("DELETE")
+    // Subrouter for "/api" prefix
+	api := r.PathPrefix("/api").Subrouter()
 
-    // File system routes
-    r.HandleFunc("/files/upload", uploadFile).Methods("POST")
-    r.HandleFunc("/files/list", listFiles).Methods("GET")
-    r.HandleFunc("/files/download/{filename}", downloadFile).Methods("GET")
-    r.HandleFunc("/files/{filename}", deleteFile).Methods("DELETE")
+	// CRUD Routes for Todos
+	api.HandleFunc("/todos", createTodo).Methods("POST")
+	api.HandleFunc("/todos", getAllTodos).Methods("GET")
+	api.HandleFunc("/todos/{uuid}", getTodo).Methods("GET")
+	api.HandleFunc("/todos/{uuid}", updateTodo).Methods("PUT")
+	api.HandleFunc("/todos/{uuid}", deleteTodo).Methods("DELETE")
+
+	// File system routes
+	api.HandleFunc("/files/upload", uploadFile).Methods("POST")
+	api.HandleFunc("/files/list", listFiles).Methods("GET")
+	api.HandleFunc("/files/download/{filename}", downloadFile).Methods("GET")
+	api.HandleFunc("/files/{filename}", deleteFile).Methods("DELETE")
+
 
     // CORS and server setup
     // handler := cors.Default().Handler(r)
