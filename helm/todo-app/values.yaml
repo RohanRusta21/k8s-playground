@@ -1,0 +1,31 @@
+# values.yaml
+
+replicaCount: 2
+
+image:
+  backend:
+    repository: aswinbenny/todo-backend
+    tag: v1
+  frontend:
+    repository: aswinbenny/todo-frontend
+    tag: v1
+  postgres:
+    repository: postgres
+    tag: 13
+
+postgres:
+  dbName: tododb
+  user: todouser
+  password: todopassword
+
+service:
+  backend:
+    port: 8080
+  frontend:
+    port: 80
+  postgres:
+    port: 5432
+
+persistence:
+  enabled: true
+  storage: 1Gi

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: todo-backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+      - name: todo-backend
+        image: "{{ .Values.image.backend.repository }}:{{ .Values.image.backend.tag }}"
+        env:
+        - name: DB_HOST
+          value: postgres-service
+        - name: DB_USER
+          value: {{ .Values.postgres.user }}
+        - name: DB_PASSWORD
+          value: {{ .Values.postgres.password }}
+        - name: DB_NAME
+          value: {{ .Values.postgres.dbName }}
+        - name: DB_PORT
+          value: "5432"
+        ports:
+        - containerPort: {{ .Values.service.backend.port }}
